@@ -1,0 +1,37 @@
+CURRENT VERSION 5.0
+
+----------------------------------------------------------------------------------------------------
+
+CHECKSUM  
+
+maximal growth rate: 0.068 flux units
+
+----------------------------------------------------------------------------------------------------
+
+CONVERSION SBML TO TEXT FILE
+
+can be performed for example using the Cobra toolbox (http://opencobra.sf.net/) and 
+commands
+
+>> model = readCbModel('yeast_modelNumber.xml',inf);
+>> writeCbModel(model,'text','yeast_modelNumber.txt');
+
+though this is not recommended as semantic annotations may be lost.
+
+----------------------------------------------------------------------------------------------------
+
+UPDATES
+
+yeast 5.0 22 aug 2011
+* new release version
+
+yeast 4.05 11 aug 2010
+* final yeast 4 release 
+* published in BMC Sys Bio 
+* addition of lipid metabolism 
+* Cobra format (http://opencobra.sourceforge.net/) allowing contraint-based analyses to be performed
+* following iMM904 (http://dx.doi.org/10.1186/1752-0509-3-37), the ATP requirements of the cell are 
+fixed at 1, and the the model can consume
+- oxygen (rate 2)
+- glucose (rate 10)
+- ammonium, [H+], iron(2+), phosphate, potassium, sodium, sulphate, [water] (unlimited) 

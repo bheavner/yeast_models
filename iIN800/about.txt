@@ -1,0 +1,16 @@
+iIN800_COBRA history:
+received 2/19/2013 from Rasmus Agren via Vangelis Simeonidis:
+
+"talked to Rasmus Agren, who says it's a COBRA problem, it's not parsing the SBML correctly. They use RAVEN for their simulations, so they were not aware of it. I am not sure this is entirely true, but they sent a new version of the model to play with (attached).
+
+Rasmus also says that glpk exits with an error with iIN800. I do not have glpk on the computer I have with me, so I cannot verify this. I suppose gurobi doesn't suffer from this issue."
+
+iIN800.mat from Markus Herrgard on 6/24/2013 with the following:
+
+"Hi Ben,
+
+Sorry I only got back to you now. I totally forgot about this and also we didn’t actually have the newest model working in COBRA Toolbox. The issue with the models is incorrect CoA balancing in the SBML files – you have to add a CoA sink to both.  The iIN800 model also required all kinds of hoops and loops to get some sort of GPRA’s together. It’s in mat format because of the issues with exporting SBML from the COBRA Toolbox.
+
+Let me know if these work for you,
+
+Markus"

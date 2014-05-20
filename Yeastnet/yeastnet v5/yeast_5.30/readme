@@ -1,0 +1,57 @@
+CURRENT VERSION: 5.30
+
+----------------------------------------------------------------------------------------------------
+
+CHECKSUM  
+
+maximal growth rate: 0.0926 flux units
+
+----------------------------------------------------------------------------------------------------
+
+CONVERSION SBML TO TEXT FILE
+
+can be performed for example using the Cobra toolbox (http://opencobra.sf.net/) and commands
+
+>> model = readCbModel('yeast_modelNumber.xml',inf);
+>> writeCbModel(model,'text','yeast_modelNumber.txt');
+
+though this is not recommended as semantic annotations may be lost.
+
+----------------------------------------------------------------------------------------------------
+
+UPDATES
+
+yeast 5.30: 18 may 2012
+* big update
+* speciesType construct no longer used
+
+yeast 5.22: 14 may 2012
+* some CO2-producing reactions set irreversible
+
+yeast 5.21: 24 apr 2012
+* same reaction in different compartments given same upper and lower bounds
+
+yeast 5.20: 11 apr 2012
+* added Kegg identifiers to metabolites and reactions
+* merged doubly-defined species
+* ensured carbon balancing
+* removed protein modification reactions
+* expanded pathway from tryptophan to NAD
+
+yeast 5.01: 21 nov 2011
+* final yeast 5 release 
+* large increase in coverage, particularly with regard to sphingolipid metabolism
+* increased compatibility with Cobra toolbox
+* model can consume glucose (rate 1 flux unit), and ammonium, H+, iron(2+), oxygen, phosphate, potassium, sodium, sulphate, water (unlimited rate) 
+* no longer releasing in old SBML format - get the latest http://sbml.org/Software/libSBML
+* contributors: Ben Heavner, Brandon Barker, Tunahan Cakir, Nicolas Le Novere, Chuan Lu, Hanan Messiha, Naglis Malys, Neil Swainston
+
+yeast 4.05: 11 aug 2010
+* final yeast 4 release 
+* published in BMC Sys Bio 
+* addition of lipid metabolism 
+* Cobra format (http://opencobra.sourceforge.net/) allowing contraint-based analyses to be performed
+* following iMM904 (http://dx.doi.org/10.1186/1752-0509-3-37), the ATP requirements of the cell are fixed at 1, and the the model can consume
+- oxygen (rate 2)
+- glucose (rate 10)
+- ammonium, [H+], iron(2+), phosphate, potassium, sodium, sulphate, [water] (unlimited) 

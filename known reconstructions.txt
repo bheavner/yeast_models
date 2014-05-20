@@ -1,0 +1,228 @@
+van Gulik and Heijnen "A Metabolic Network Stoichiometry Analysis of Microbial 
+Growth and Product Formation" Biotech and Bioeng (1995) 48:681-698.
+ - called "iGH99" in Hjersted & Henson 2009: doi: 10.1049/iet-syb.2008.0103
+ - focus on optimization of fermentation processes
+ - "metabolic network" for stoichiometric network
+ - present 5 different networks, with 70, 73, 74, 73, and 81 rxns, and
+   86, 85, 86, 85, and 88 species
+ - focus is central carbon metabolism
+ - used biomass composition of "verduyn et al."
+ - protein from Oura
+ - lipids + RNA from bruineberg et al
+ - doesn't include fatty acids b/c assumed from media
+ - objective: max biomass production
+ - lots of discussion of energetics, carbon flux shifts
+ - WORTH REVISITING WITH NEW MODELS!
+
+Vanrollegem et al. "Validation of a Metabolic Network for Saccharomyces
+cerevisiae Using Mixed Substrate Studies" Biotechnol. Prog (1996) 12:434-448
+doi: 10.1021/bp960022i
+ - switches among 4 metabolic regimes in chemostats during transition from
+   100% glucose to 100% ethanol feed
+ - model prediction of biomass yield on acetate compared to measurements
+ - 99 rxns, 98 metabolites
+ - uses full-rank matrix, not optimization
+ - no compartmentalization
+ - good, explicit discussion of assumptions
+ - "the pentose phosphate pathway was assumed to be the only source of NADPH,
+   whereas the reactions catalyzed by acetaldehyde dehydrogenase and 
+   isocitrate dehydrogenase only had NADH as a cofactor" (they justify in
+   a future paper)
+
+Nissen et al. "Flux distributions in anaerobic, glucose-limited
+continuous cultures of Saccharomyces cerevisiae" Microbiology (1997) 
+143:203-218
+ - anaerobic - 1997 - 37 reactions + 43 compounds + lab tests
+ - emphasizes metabolic flux analysis, uses stoichiometric matrix
+ - includes refs for each rxn
+ - discusses biomass composition
+ - refs The Yeasts ed Rose/Harrison
+
+KEGG - Kanehisa and Goto 2000
+
+Gombert et al. "Network Identification and Flux Quantification in the Central
+Metabolism of Saccharomyces cerevisiae under Different Condtions of Glucose
+Repression" J. Bacteriol (2001) 183(4):1441-1451. doi: 
+10.1128/JB.183.4.1441-1451.2001
+ - metabolic network analysis
+ - model included in paper
+
+Carlson, Fell, and Srienc "Metabolic Pathway Analysis of a Recombinant Yeast
+for Rational Strain Development" Biotech and Bioeng (2002) 79:121-134
+doi: 10.1002/bit.10305
+ - central metabolism + PHB biosynthesis
+ - 64 reactions
+ - 67 metabolites (59 internal - steady state)
+ - "the physical location of "external" metabolites is not necessarily 
+   "external" to the cell
+ - no biomass term (assume no growth)
+ - no water or proton balances
+ - elementary mode analysis
+
+iFF708 - 2003 - Forster et al. doi:10.1101/gr.234503
+ - "initiated by downloading a gene catalog from the KEGG metabolic pathways
+   database." (which thus defined the scope)
+ - EC numbers used to search for stoichiometry using Expassy.ch/enzyme/
+ - checked gene list vs MIPS database: mips.gsf.de/proj/yeast and SGD
+ - additional database and lit search to improve EC stoichiometry
+ - Hjersted and Henson couldn't replicate results 
+   (doi:10.1049/iet-syb.2008.0103)
+ - Supplementary info at http://www.sysbio.se/supp_mat/JF/
+
+iND750 - 2004 - Duarte et al. doi:10.1101/gr.2250904
+ - localization of gene products reevaluated, add 5 compartments
+ - functional assignments of gene products revised, cell-wide proton balance
+ - introduce gene-protein-reaction association
+
+MetaCyc - 2004 - Krieger et al. doi: 10.1093/nar/gkh100
+ - YeastCyc says 2002 here: 
+   http://pathway.yeastgenome.org/about/YeastCyc_overview.shtml but it wasn't added
+   to metacyc yet.
+
+iLL672 - 2005 - Kuepfer, Sauer, and Blank. doi: 10.1101/gr.3992505
+ - updated iFF708
+ - validated deletion phenotypes in 5 different environmental conditions
+ - introduce use of geometric mean
+ - deletes many dead-end reactions of iFF708 leading to improved single
+   deletion phenotype predictions
+ - reported geometric mean accuracy of "81-89%"
+
+iMH805/775 and iMH805/837 - 2006 - Herrgard et al. doi: 10.1101/gr.4083206
+ - add regulatory constraints to iND750
+
+iJH732 - 2008 - Hjersted and Henson. doi: 10.1049/iet-syb.2008.0103
+ - decompartmentalized iND750
+ - used to evaluate effects of compartmentalization
+ - computationally develop mutant with improved ethanol production 
+   capabilities
+
+iIN800 - August 2008 - Nookaew et al. doi:10.1186/1752-0509-2-71
+ - effort to improve reconstruction of lipid metabolism, tRNA synthesis, and
+   transport processes
+ - new biomass equations (diff for C- and N- limited)
+ - based on iFF708 to avoid compartmentalization complexity of iND750 and
+   smaller scope of iLL672
+ - KEGG + SGD
+ - performed sensitivity analysis on biomass composition
+ - reported geometric mean of 60.79% (6 conditions)
+
+Yeast - October 2008 - Herrgard et al. doi: 10.1038/nbt1492
+ - consensus reconstruction, based on iMM904 (not yet published) and iLL672
+ - attempt to make "consolidated metabolic network"
+ - intended to be "starting point for further investigations"
+ - an inventory of metabolites and basic network structure that can be used
+   to set up flux balance models using different assumptions (ie, biomass,
+   reversibility, lumping, de-compartmentalizing)
+ - note indicates taht iIN800 published while went to press
+
+iMM904 - 2009 - Mo et al. doi:10.1186/1752-0509-3-37
+ - update to iND750
+ - analyzed with constraint-based sampling approach (rather than max biomass)
+ - re-evaluated iND750 reactions and GPR associations
+ - minimal media conditions
+ - simulated WT growth aerobic and anaerobic carbon-limited chemostat
+ - similar to iFF708 validation
+ - objective: minimize glucose uptake rate with fixed growth rate
+ - next validation: deletion phenotypes
+ - adjusted biomass objective to agree with iLL672 study
+ - "Reactions from previous S. cerevisiae networks associated with quinone, 
+   beta-alanine, and riboflavin biosynthetic pathways were essentially
+   inferred from known reaction mechanisms based on reactions in previous 
+   network reconstructions of E. coli"
+ - "While the full gene complement in iMM904 greatly increased the number of 
+   true viable predictions, the full model also made significantly more 
+   false viable predictions compared with reduced iMM904 and iLL672 
+   predictions."
+
+Yeast 2 - June 2009
+ - http://www.comp-sys-bio.org/yeastnet/v2/index.html
+ - incorporated iIN800 info
+
+Yeast 3 - November 2009
+ - http://www.comp-sys-bio.org/yeastnet/v3/index.html
+ - incorporated literature refs for many transporters
+
+Yeast 4 - 2010 - Dobson et al. doi:10.1186/1752-0509-4-145
+ - increased metabolite transport, lipid metabolism, and other pathways
+ - improved pathway connectivity
+ - adds reactions from literature "which are entirely novel to any genome-
+   wide yeast metabolic reconstruction"
+ - add data from iMM904 and iIN800 when data backed up by traceable evidence
+ - 32 enzymes from Yeast 1.0 removed
+ - some met localization changes
+ - wider lipid coverage than iIN800
+ - add biomass reaction from iIN800 (c-limited) to enable FBA + riboflavin
+
+iAZ900 - 2010 - Zomorrodi and Maranas doi:10.1186/1752-0509-4-178
+ - use automated GrowMatch procedure to improve single deletion phenotype
+   predictions
+ - 120 model changes suggested
+ - also suggest changes to Yeast 4.0
+
+
+RefRec - 2010 - Aho et al. doi:10.1371/journal.pone.0010662
+ - reconsruction of the entire yeast molecular interaction network
+ - focus on integrating info from public databases: Ensembl, SwissProt,
+   IntAct, KEGG, iND750, RefSeq
+ - model available as SBML, but simulation code/methods not included in
+   pub
+ - Table 3 gives sources of viable and inviable mutant strain info for 
+   comparison
+ - Figure 9 shows which portions of iND750 give poor predictions (fairly
+   even distribution)
+
+iMM904bs - 2011 - Szappanos et al. doi:10.1038/ng.846
+ - apply machine learning approach to refine NAD metabolism in iMM904
+ - changes allowed: modify reversibility, remove reactions, altering biomass
+   requirements
+ - omitting glycogen from biomass corrected genetic interaction prediction
+   mistake; removing 2 reactions corrected 4 incorrect predictions in NAD
+   biosynthetic pathway. Model contains 3 routes for NAD, including some
+   which are present in E. coli, but don't have homologous yeast genes
+ - found that "these results strongly suggest that the aspartate to NAD
+   pathway is not present in yeast."
+ - "We can draw several conclusions from these inconsistencies. First,
+   the quality and completeness of the metabolic reconstruction should be
+   improved."
+
+iBKSce50 - 2011 - Matsuda et al. doi:10.1186/1475-2859-10-70
+http://www.microbialcellfactories.com/content/10/1/70/
+
+iLL672v2 - 2011 - Costenoble et al. doi: 10.1038/msb.2010.122
+ - TO REVIEW
+
+2011 - SuBliMinaL Toolbox automated reconstruction - doi: 10.2390/biecoll-jib-2011-186.
+
+
+Yeast 5 - (released 2011) published 2012 - Heavner et al. doi:10.1186/1752-0509-6-55
+ - separate reconstruction and model
+ - incorporate suggested NAD pathway modifications from iMM904bs
+ - expand sphingolipid reconstruction based on biochemical literature
+
+DynamoYeast 2012 - Celton et al - http://dx.doi.org/10.1016/j.ymben.2012.03.008
+ - used to evaluate NADH metabolism
+ - derived from iIN800, extract central carbon metabolism
+ - 87 reactions, 77 metabolites, 72 ORFs
+
+iTO977 - 2013 - Osterlund et al - https://www.biomedcentral.com/1752-0509/7/36/abstract doi:10.1186/1752-0509-7-36
+ - update of iIN800 with Yeast 5 stuff + gap filling
+ - expand scope to GPI anchor assembly and some protein modification
+
+Yeast 6 - (released December 2012) published 2013 - Heavner et al. http://database.oxfordjournals.org/content/2013/bat059.short?rss=1 doi: 10.1093/database/bat059
+ - yeast 5 curated to improve gene essentiality predictions
+
+Yeast 7 - (released April 2013) - Aung et al.
+ - submitted - Hnin Aung, Susan Henry and Larry Walker: "Revising the
+   
+representation of fatty acid, glycerolipid, and glycerophospholipid 
+   metabolism in the consensus 
+model of yeast metabolism", Industrial 
+   Biotechnology (submitted)
+ - big expansion of lipid metabolism
+
+2013 - Biomodels (online 2012) - doi:10.1186/1752-0509-7-116 
+http://www.biomedcentral.com/1752-0509/7/116
+https://www.ebi.ac.uk/biomodels-main/BMID000000141353
+
+CoReCo yeast model - 2014 - Pitkanen et al - doi:10.1371/journal.pcbi.1003465 - automated method, genome + KEGG
+

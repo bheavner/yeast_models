@@ -1,0 +1,73 @@
+CURRENT VERSION: 5.33
+
+two versions of the network are made available
+* yeast_x.yz_model.xml, a model for use in flux analyses
+* yeast_x.yz_recon.xml, a reconstruction containing only reactions for which there is with experimental evidence
+
+----------------------------------------------------------------------------------------------------
+
+CHECKSUM  
+
+maximal growth rate: 0.0433 flux units
+
+----------------------------------------------------------------------------------------------------
+
+CONVERSION SBML TO TEXT FILE
+
+can be performed for example using the Cobra toolbox (http://opencobra.sf.net/) and commands
+
+>> model = readCbModel('yeast_modelNumber.xml',inf);
+>> writeCbModel(model,'text','yeast_modelNumber.txt');
+
+though this is not recommended as semantic annotations may be lost.
+
+----------------------------------------------------------------------------------------------------
+
+UPDATES
+
+yeast 5.33: 4 sep 2012
+* r_0772 (NADH kinase mitochondrial) had incorrect modifiers
+* r_0226 (ATP synthase) turned off
+* r_1000 (soluble fumarate reductase) removed as duplicate
+
+yeast 5.32: 12 jul 2012
+* improved support for FBC package
+
+yeast 5.31: 18 jun 2012
+* various changes, including those suggested in Jouhten et al (http://dx.doi.org/10.1111/j.1742-4658.2012.08649.x)
+* added support for flux balance constraints package (http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Flux_Constraints)
+
+yeast 5.30: 18 may 2012
+* big update
+* speciesType construct no longer used
+
+yeast 5.22: 14 may 2012
+* some CO2-producing reactions set irreversible
+
+yeast 5.21: 24 apr 2012
+* same reaction in different compartments given same upper and lower bounds
+
+yeast 5.20: 11 apr 2012
+* added Kegg identifiers to metabolites and reactions
+* merged doubly-defined species
+* ensured carbon balancing
+* removed protein modification reactions
+* expanded pathway from tryptophan to NAD
+
+yeast 5.01: 21 nov 2011
+* final yeast 5 release 
+* large increase in coverage, particularly with regard to sphingolipid metabolism
+* increased compatibility with Cobra toolbox
+* model can consume glucose (rate 1 flux unit), and ammonium, H+, iron(2+), oxygen, phosphate, potassium, sodium, sulphate, water (unlimited rate) 
+* no longer releasing in old SBML format - get the latest http://sbml.org/Software/libSBML
+* contributors: Ben Heavner, Brandon Barker, Tunahan Cakir, Nicolas Le Novere, Chuan Lu, Hanan Messiha, Naglis Malys, Neil Swainston
+
+yeast 4.05: 11 aug 2010
+* final yeast 4 release 
+* published in BMC Sys Bio 
+* addition of lipid metabolism 
+* Cobra format (http://opencobra.sourceforge.net/) allowing contraint-based analyses to be performed
+* following iMM904 (http://dx.doi.org/10.1186/1752-0509-3-37), the ATP requirements of the cell are fixed at 1, and the the model can consume
+- oxygen (rate 2)
+- glucose (rate 10)
+- ammonium, [H+], iron(2+), phosphate, potassium, sodium, sulphate, [water] (unlimited) 

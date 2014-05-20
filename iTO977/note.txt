@@ -1,0 +1,273 @@
+https://www.biomedcentral.com/1752-0509/7/36/abstract
+
+iTO977_cobra_compatible.xml from Markus Herrgard 6/24/2013, with the following:
+"
+Hi Ben,
+ 
+Sorry I only got back to you now. I totally forgot about this and also we didn’t actually have the newest model working in COBRA Toolbox. The issue with the models is incorrect CoA balancing in the SBML files – you have to add a CoA sink to both.  The iIN800 model also required all kinds of hoops and loops to get some sort of GPRA’s together. It’s in mat format because of the issues with exporting SBML from the COBRA Toolbox.
+
+Let me know if these work for you,
+
+Markus"
+
+(FBA predicts a 0 objective value, so no growth.)
+
+The iTO model didn't have an objective (model.c) set, but once I set it to the Growth reaction, I got an objective value of 0.8333.
+
+note: if I import the cobra-compatible .xml file using the readCbModel function from OpenCobra 2.0, there are 1560 reactions and no gene annotation is loaded.
+
+if I import the iTO977.xml file, there are 1562 reactions, with genes and grRules.
+
+the iTO977.xml version has these reactions (1562 rxns total):
+    'FATP' (rxn 357)
+    'FNADH' (rxn 372)
+    'FNADPH' (rxn 373)
+
+the cobra-compatible version doesn't have these, and has 'CoA_drain' (1560 rxns total). 
+
+So, I made a .mat file with the genes and grRules from the iTO977.xml file copied to the cobra-compatible structure, and setting a growth objective for rxn 1559, GROWTH
+
+iTO_compatible.rules = iTO.rules([1:356, 358:371, 374:1562, 1]);
+iTO_compatible.genes = iTO.genes;
+iTO_compatible.rxnGeneMat = iTO.rxnGeneMat([1:356, 358:371, 374:1562, 1], :);
+iTO_compatible.grRules = iTO.grRules([1:356, 358:371, 374:1562, 1]);
+iTO_compatible.c(1559)=1;
+
+iTO = iTO_compatible;
+save('iTO_bh','iTO')
+
+I also copied ChEBI Ids from supplemental file 1 of the iTO paper as follows:
+( see C:\Users\bheavner\Documents\MATLAB\in progress\model comparison\fresh start\circos comparisons\compareMets_Y7_new.m )
+copy REPLACEMENT ID column and the notes that look like 'obo.chebi:CHEBI:18367' to a iTO_chebis cell array in matlab.
+
+[~, IA, IB] = intersect(iTO_chebis(:,1),iTO.mets);
+iTO.metChEBIID(IB) = iTO_chebis(IA,2);
+
+no_ChEBI = (cellfun('isempty',iTO.metChEBIID));
+emptycell={{' '}};
+[iTO.metChEBIID{no_ChEBI}] = deal(emptycell); 
+% iTO.metChEBIID is now a cell of cells (of cells of strings) Need to
+% unnest it a bit
+iTO.metChEBIID=[iTO.metChEBIID{:}]'; 
+iTO.metChEBIID=[iTO.metChEBIID{:}]';
+p1 = ['obo.chebi:CHEBI:([^"]*)'];
+[temp, ~] = regexp(iTO.metChEBIID, p1, 'tokens', 'match');
+no_ChEBI = (cellfun('isempty',temp));
+emptycell={{' '}};
+[temp{no_ChEBI}] = deal(emptycell); 
+temp=[temp{:}]';
+temp=[temp{:}]'; 
+iTO.metChEBIID=temp;
+
+I copied met KEGG IDs from Y7 as follows:
+[~, IA, IB] = intersect(Y7.metChEBIID, iTO.metChEBIID);
+iTO.metKEGGID(IB) = Y7.metKEGGID(IA);
+
+save('iTO_bh','iTO')
+
+
+as of 1/9/14, testYeastModel and blocked reactions code hangs on this model - fixed by modifying code (described below)
+
+as of 1/10/14, testYeastModel hangs when using iFF biomass def and "complete" medium - auxotrophy analysis, (or kuepfer medium?)
+
+
+
+------------------------
+
+1/9/14 code fixes:
+
+testYeastModel hangs on auxotrophy analysis at single gene deletion analysis after i=128
+
+Ah - since blocked rxn and auxotrophy analysis both rely on complete medium, that could be the problem.
+
+yep, if I make maximal model, it hangs at gene 128. This gene catalyzes rxns 421 and 422, GPI transporters.
+
+What if I change some of the following so they're not transporting:?
+ Uptake of glycerophosphatidyl-D-myo-inositol (rxn 1357, GROPIxtI)
+ Excretion of glycerophosphatidyl-D-myo-inositol (rxn 1489, GROPIxtO)
+ Uptake of glycerophosphatidylcholine (rxn 1356, GROPCxtI)
+ Excretion of glycerophosphatidylcholine (rxn 1488, GROPCxtO)
+ 
+ 'YCR098C'
+
+ save('temp','model_maximal');
+ singleGeneDeletion(model_maximal,'FBA',{'YCR098C'}) % this hangs
+ 
+model_maximal.ub([1356 1357])=0; % still hangs
+model_maximal.ub([1488 1489])=0; % still hangs
+
+load('temp.mat') %reload
+model_maximal.lb([421 422]) = 0;
+model_maximal.ub([421 422]) = 0;
+optimizeCbModel(model_maximal) % this hangs, but can be interrupted
+
+load('temp.mat') %reload
+model_maximal.lb([421]) = 0;
+model_maximal.ub([421]) = 0;
+optimizeCbModel(model_maximal) % this hangs, but can be interrupted
+
+load('temp.mat') %reload
+optimizeCbModel(model_maximal) % this works
+model_maximal.lb([422]) = 0;
+model_maximal.ub([422]) = 0;
+optimizeCbModel(model_maximal) % this works
+
+So... rxn 421 must be able to carry a flux for the problem to be solvable.
+
+I modified my analysis code to skip this gene in deletion analysis with complete medium and to skip this reaction in FVA.
+
+------------------------------
+
+1/10/14 code changes
+
+Auxotrophy analysis still hangs when using the iFF_biomass! - perhaps prior to any KOs (don't get scroll bar), WT FBA hangs - can control-C interrupt. Then scroll bar appears, and can't interrupt.
+
+now, troubleshoot that:
+set biomass def to iFF - optimizeCbModel works
+
+set maximal medium
+save('temp2','model_maximal');
+optimizeCbModel hangs! so... I've made something infeasible... try maximizing biomass components one at a time.
+
+biomassPrecursorCheck thinks everything can be produced...
+but optimizeCbModel still hangs.
+
+skip auxotrophy analysis for this model? not sufficient - iFF biomass simluations all fail. (but wait-  they worked before? line 126?)
+
+It appears that the iFF biomass def is causing problems somehow. Hrm.
+Next dig into gurobi...
+
+posted to https://groups.google.com/forum/?fromgroups=#!topic/gurobi/vbnqzyBYZ-k
+basically, Gurobi stops in 394 iterations, no matter how long I let it run.
+
+--------------------------------------
+1/13/14
+1) does iFF biomass def by itself make problem infeasible or not?
+	load iTO_bh
+	set biomass to iFF by copy/paste from testYeastModel.m code
+	optimizeCbModel -- it works
+	
+does iTO + minimal medium work?
+	iTO_minimal_media = testYeastModel(iTO,1,0,0,0,1); %yes
+
+does iTO + minimal + iFF biomass work?
+	iTO_minimal_media_iFF_biomass = testYeastModel(iTO,1,1,0,0,1); %no, hangs on auxotrophy analysis
+
+does kuepfer glu + iFF biomass work?
+	iTO_kuepfer_media_glu_iFF_biomass = testYeastModel_kuepfer(iTO,1,0,1); %no, hangs on FBA
+
+so, iTO + iFF biomass may work for default medium and minimal (but not auxotrophy)
+iTO + iFF biomass doesn't work with kuepfer medium or open exchanges.
+
+2) Does this happen with glpk?
+load('temp2.mat') %maximal model - iFF biomass + open exchanges
+changeCobraSolver('glpk');
+optimizeCbModel(model_maximal); %yep, hangs.
+
+So... can I get it to work by changing just some exchange reactions?
+Look at kuepfer medium + iFF biomass.
+
+What's different between kuepfer and minimal?
+minimal is: ammonia/um, glucose, oxygen, phosphate, sulphate
+   
+   desiredExchanges = {...
+        'NH3xtI'; ... % 'ammonia exchange';
+        'O2xtI'; ... % 'oxygen exchange';
+        'PIxtI'; ... % 'phosphate exchange';
+        'SLFxtI'; ... % 'sulfate uniport ';       
+        };
+    glucoseExchange = {...
+        'GLCxtI'; ... % 'glucose transport' - should be ub=10 (was 0 10)
+        };
+		
+kuepfer is:
+
+        'BTxtI'; ... % biotin
+        'PNTOxtI'; ... % pantothenate
+        'NAxtI'; ... % nicotinic acid
+        'INSxtI'; ... % inositol
+        'VB6xtI'; ... % pyridoxine
+        'THMxtI'; ... % thiamine
+        'HISxtI'; ... % histidine
+        'URAxtI'; ... % uracil
+        'METxtI'; ... % methionine
+        'LEUxtI'; ... % leucine
+        'SLFxtI'; ... % sulfate (OK)
+        'PIxtI'; ... % phosphate (OK)
+        'NAxtI'; ... % sodium
+        'KxtI'; ... % potassium
+        'O2xtI'; ... % oxygen (OK)
+        % water
+        % protons
+        'NH3xtI'; ... % ammonium (OK)
+		
+So, start with minimal, then add kuepfer compounds one at a time and see when iTO+iFF pukes.
+
+minimal + exchanges:
+model.ub(findRxnIDs(model,'BTxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'PNTOxtI')) = 1000; %works
+model.ub(findRxnIDs(model,'NAxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'INSxtI')) = 1000; % works, with much increasted flux
+model.ub(findRxnIDs(model,'VB6xtI')) = 1000; % works
+model.ub(findRxnIDs(model,'THMxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'HISxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'URAxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'METxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'LEUxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'NAxtI')) = 1000; % works
+model.ub(findRxnIDs(model,'KxtI')) = 1000; % works.
+
+! So... it doesn't puke! But I thought this hangs?
+
+iTO_kuepfer_media_glu_iFF_biomass = testYeastModel_kuepfer(iTO,1,0,1); 
+
+yep, it does.
+
+With the same exchanges that I just allowed.... 
+
+Ah, but my script adds the auxotrophic markers - does that break things?
+
+Try script w/o auxotropic markers - still hangs. My script is doing something unexpected!
+
+observation: 
+iTO predicts growth on Kuepfer medium with no carbon source.
+
+still works after adding glucose exchange
+hangs after I change biomass def (but can interrupt)
+
+I think I'm changing rxn 1555, 'CBIOMASS'.
+
+So.. it appears my script and command line changes are doing different things. I'll give myself tomorrow to try to figure it out, then not do the iFF biomass def + all exchange reactions if I can't fix it by EOD.
+
+does iTO_sc_media_iFF_biomass work?
+
+
+Ah-ha! Apparently, it's a gurobi bug:
+
+Christopher Maes <maes@gurobi.com>		
+to Technical, me
+Hi Ben,
+
+Thanks again for reporting this issue. There was a bug in the
+post-solve phase of simplex that prevented the solve from completing.
+This bug has been fixed and the fix will appear in the next release.
+Until then you should be able to work around this issue by using
+slightly reduced feasibility and optimality tolerances. I noticed you
+have these tolerances set as tightly as possible (1e-9). Please try
+loosening these tolerances to 1e-8 or 1e-7.
+
+Thanks,
+Chris
+
+And if I relax the tolerances, it solves!
+
+params.FeasibilityTol = 1e-08
+params.OptimalityTol = 1e-08
+gurobi(LPproblem,params)
+
+objval: 20.0000
+
+Okay... so, perhaps modify solveLP to do that? globally? (for now?)
+changed getCobraSolverParams to relax the tolerances to 1e-8... and all simulations work!
+
+Saved results, reverted changes to getCobraSolverParams.
