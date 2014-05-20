@@ -1,0 +1,11 @@
+optimal flux value is 0.14057 (change readme)
+
+biomass def change: phosphatidate [cytoplasm], met s_1331 is removed. What should replace it?
+need some isa reactions for that?
+
+reaction r_4045 is potassium exchange, which was r_2020 in Y5 (and was removed in Y6). Should be renumbered to be consistent.
+
+TODO: check anaerobic growth predictions - need to supplement with unsaturated FAs now?
+
+the only lipid-related gene that every model mispredicts in minimal media is YNL267W, which encodes Phosphatidylinositol 4-kinase. It has been described as essential, but every model calls it inessential (a false positive). 
+

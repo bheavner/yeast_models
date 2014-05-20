@@ -1,0 +1,19 @@
+sln=optimizeCbModel(Y6,[],'one') % f = 0.13364
+sln.x(findRxnIDs(Y6,'r_1761')) % no ethanol production
+
+Y6.lb(findRxnIDs(Y6,'r_1992'))=0; % was -1000 - block oxygen exchange
+Y6.lb(findRxnIDs(Y6,'r_1753'))=-1000; % was 0 - allow episterol exchange
+Y6.lb(findRxnIDs(Y6,'r_1757'))=-1000; % was 0 - allow ergosterol exchange
+Y6.lb(findRxnIDs(Y6,'r_1788'))=-1000; % was 0 - allow fecosterol exchange
+Y6.lb(findRxnIDs(Y6,'r_1915'))=-1000; % was 0 - allow lanosterol exchange
+Y6.lb(findRxnIDs(Y6,'r_2106'))=-1000; % was 0 - allow zymosterol exchange
+Y6.lb(findRxnIDs(Y6,'r_2137'))=-1000; % was 0 - allow ergosta-5,7,22,24(28)-tetraen-3beta-ol exchange
+Y6.lb(findRxnIDs(Y6,'r_2134'))=-1000; % was 0 - allow 14-demethyllanosterol exchange
+
+ana_sln_1=optimizeCbModel(Y6,[],'one') % f = 0.10671
+ana_sln_1.x(findRxnIDs(Y6,'r_1761')) % no ethanol production
+
+Y6.ub(findRxnIDs(Y6,'r_0226'))=0; % was 1000 - turn off ATP synthase
+
+ana_sln_2=optimizeCbModel(Y6,[],'one') % f = .01955
+ana_sln_2.x(findRxnIDs(Y6,'r_1761')) % check ethanol (still 0) - but checkYeastCarbonFluxes finds them...

@@ -1,0 +1,72 @@
+to curate:
+- folic acid (should be folate - folic acid is synthetic form - for YGR267C false positive; may reflect unknown intermediate steps in pathway (dihydroneopterin triphosphate pyrophosphatase, which may be FOL1)
+
+- hypusine
+
+- relaxing constraints makes fewer blocked reactions.
+
+----------------------
+
+per Kevin Correia (Toronto)
+I've read several papers that malic enzyme (malate to pyruvate) is NADP-dependent, not NAD. However, SGD/Uniprot have it listed as NAD-dependent. (r_0718)
+
+NADH dehydrogenase is not proton translocating in SCE. This has serious implications for energetics.
+YML120C (r_0773)
+
+I drew out the zymestrol pathway back in the fall and I think that zymestrol intermediate c does not exist. Intermediate 1b should proceed directly to 2. I could be wrong though. 
+http://www.biocyc.org/META/NEW-IMAGE?type=PATHWAY&object=PWY-6074
+
+Chitin should be part of the biomass equation. On the order of 1-5%. This has a marginal impact on quantitative predictions for ethanol/acetate.
+
+Other observation: IDP2 was missing, but it looks like it has been added to the recent version.
+
+the biomass equation I see in YCM 5 and 6 do not add up to 1 gDCW / 1 gDCW / h (or 1 /h).
+
+--------------------
+
+per BH
+pyruvate transport is irreversible in Y6. Since pyruvate can be excreted (doi:10.1038/msb.2013.11), allow it to be reversible
+model.lb(findRxnIDs(model,'r_1254'))=-1000; %allow reversible
+
+--------------------
+
+per Balázs Szappanos,
+Add the reaction
+raffinose [external] -> fructose [external] + melobiose [external],
+catalyzed by YIL162W (ref PMID 4967422), along with exchange
+reactions for raffinose and melobiose (if they're not there) to the
+model.
+
+---------------------
+
+biomass def changes:
+to add:
+chitin = s_0509
+heme - s_0811 = heme a [m]; s_0812 = heme o [m]; at the moment, the pathway goes heme o -> heme a | (dead end after reraction r_0530). 
+rxn r_0530 is catalyzed by (YPL252C AND YDR376W AND YER141W)
+rxn r_0531 catalyzed by YPL172C.
+of these, 'YDR376W' and 'YPL252C' are essential.
+
+So, add heme a to biomass def, and change annotation to ((YPL252C AND YDR376W) OR (YPL252C AND YDR376W AND YER141W)) (though this biology is confusing and weird and should be further curated)
+
+folic acid = s_0719
+hypusine = not in model, but CHEBI:21858... met s_1526 is a dead end metabolite at the moment.
+
+should have to add iron to media, too... it's rxn r_1861
+
+I'll just pick the lowest biomass component coefficient for now to test: 5.6e-05
+
+model = Y6;
+model.S(findMetIDs(model,'s_0509'),1883) = -0.000056 %chitin - grows
+model.S(findMetIDs(model,'s_0811'),1883) = -0.000056 %heme - grows
+model=changeGeneAssociation(model,model.rxns(findRxnIDs(model,'r_0530')), '((YPL252C AND YDR376W) OR (YPL252C AND YDR376W AND YER141W))');
+model.S(findMetIDs(model,'s_0719'),1883) = -0.000056 %folic acid - doesn't grow
+
+so, folic acid requirement blocks growth. 
+
+--------------------------
+
+per Hnin Aung:
+I expect that adding PI-4-P (and PI-4,5-P2) would be beneficial for the metrics of gene essentiality and blocked reactions. These metabolites are involved in processes currently outside the model scope such as signaling, recruitment of proteins to specific membranes, and regulation of cell wall maintenance/synthesis. Since these processes aren't included in the model, a work-around would be to include these as components of the biomass def.
+
+One thing to note for this is that there are separate pools of PI-4-P in the cell with their own distinct roles in cell functioning. By this, I mean that absence of STT4, which generates PI 4-P at the plasma membrane, cannot be compensated by overproduction of PIK1, which generates PI 4-P at the Golgi membrane, and vice versa. In this case, we shouldn't group all the PI-4-P species together but should leave the distinctions between compartments.

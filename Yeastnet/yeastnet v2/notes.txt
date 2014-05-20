@@ -1,0 +1,5 @@
+This copy is SBML level="2" version="4"
+
+So far, the only software I've found that can read it is a beta version of 
+CellDesigner
+

@@ -1,0 +1,58 @@
+CURRENT VERSION: 7.00
+
+three versions of the network are made available
+* yeast_x.yz.xml, a model for use in flux analyses, in FBC format [http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Flux_Constraints]
+* yeast_x.yz_cobra.xml, the same model, in Cobra format [http://opencobra.sf.net/]
+* yeast_x.yz_recon.xml, a reconstruction containing only reactions for which there is experimental 
+evidence
+
+----------------------------------------------------------------------------------------------------
+
+CHECKSUM  
+
+maximal growth rate: 0.14057 flux units
+
+----------------------------------------------------------------------------------------------------
+
+CONVERSION SBML TO TEXT FILE
+
+can be performed for example using the Cobra toolbox and commands
+
+>> model = readCbModel('yeast_x.yz_cobra.xml',inf);
+>> writeCbModel(model,'text','yeast_x.yz.txt');
+
+though this is not recommended as semantic annotations may be lost.
+
+----------------------------------------------------------------------------------------------------
+
+UPDATES
+
+yeast 7.00: 19 apr 2013
+* large update, as described in Hnin Aung, Susan Henry and Larry Walker: "Revising the 
+representation of fatty acid, glycerolipid, and glycerophospholipid metabolism in the consensus 
+model of yeast metabolism", Industrial Biotechnology (submitted)
+
+yeast 6.06: 8 apr 2013
+* refined version of yeast 5, obtained through additional curation
+* slightly smaller model with a higher predictive accuracy of gene essentiality
+
+yeast 5.01: 21 nov 2011
+* final yeast 5 release 
+* large increase in coverage, particularly with regard to sphingolipid metabolism
+* increased compatibility with Cobra toolbox
+* model can consume glucose (rate 1 flux unit), and ammonium, H+, iron(2+), oxygen, phosphate,
+potassium, sodium, sulphate, water (unlimited rate) 
+* no longer releasing in old SBML format - get the latest http://sbml.org/Software/libSBML
+* contributors: Ben Heavner, Brandon Barker, Tunahan Cakir, Nicolas Le Novere, Chuan Lu, Hanan 
+Messiha, Naglis Malys, Neil Swainston
+
+yeast 4.05: 11 aug 2010
+* final yeast 4 release 
+* published in BMC Sys Bio 
+* addition of lipid metabolism 
+* Cobra format (http://opencobra.sf.net/) allowing contraint-based analyses to be performed
+* following iMM904 (http://dx.doi.org/10.1186/1752-0509-3-37), the ATP requirements of the cell are 
+fixed at 1, and the the model can consume
+- oxygen (rate 2)
+- glucose (rate 10)
+- ammonium, [H+], iron(2+), phosphate, potassium, sodium, sulphate, [water] (unlimited) 
