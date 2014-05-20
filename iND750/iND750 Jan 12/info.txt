@@ -1,0 +1,9 @@
+I downloaded this version from the bigg database on 1/13/12.
+I selected the compartmentalized SBML file for model S. cerevisiae iND750 
+with optional fields gprs, genes, proteins, citations.
+
+all confidence leves appear to be 0; no citations appear to be included
+FBA works, optimal value = 0.973
+
+BiGG cite:
+Schellenberger, J., Park, J. O., Conrad, T. C., and Palsson, B. Ø., "BiGG: a Biochemical Genetic and Genomic knowledgebase of large scale metabolic reconstructions", BMC Bioinformatics, 11:213, (2010).
