@@ -226,3 +226,4 @@ https://www.ebi.ac.uk/biomodels-main/BMID000000141353
 
 CoReCo yeast model - 2014 - Pitkanen et al - doi:10.1371/journal.pcbi.1003465 - automated method, genome + KEGG
 
+"Refined Consensus Model" - 2016 - van Heck et al - http://dx.doi.org/10.1371/journal.pcbi.1005085 - automated method to make consensus model from multiple models of organism. Supplementary data includes "Basic Consensus Models" for iIN800, iMM904, and iND750, but does not include a RCM for yeast.
